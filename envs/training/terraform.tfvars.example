@@ -1,0 +1,42 @@
+###############################################################################
+# Copy to terraform.tfvars and edit. Do NOT commit terraform.tfvars because it
+# may reference images or tenants you do not want public.
+###############################################################################
+
+location            = "southeastasia"
+resource_group_name = "rg-commercial-trainning"
+
+# Short, lowercase, alphanumeric only. Used as a prefix for every resource.
+# Globally-unique names (storage, ACR, KV, Event Hubs ns, Cosmos) append a
+# random 6-char suffix automatically.
+name_prefix = "comtrain"
+
+# Cosmos free tier is one-per-subscription. Set to false if already used.
+enable_cosmos_free_tier = true
+
+# KEDA scaling thresholds. Tune these for your traffic.
+# report_http_concurrent_requests    = 50
+# ingest_unprocessed_event_threshold = 64
+
+# Grafana Alloy sidecar. The application images export OTLP metrics/logs to
+# localhost, and the Alloy image forwards them to Prometheus and Loki.
+enable_grafana_alloy_sidecar = false
+
+# Replace these once you have pushed real images to ACR.
+# Format: <acr_login_server>/<repo>:<tag>
+# auth_service_image   = "crcomtrainabcdef.azurecr.io/auth-service:0.1.0"
+# report_service_image = "crcomtrainabcdef.azurecr.io/report-service:0.1.0"
+# data_ingest_image    = "crcomtrainabcdef.azurecr.io/data-ingest-service:0.1.0"
+# prometheus_image     = "crcomtrainabcdef.azurecr.io/prometheus:latest"
+# grafana_image        = "crcomtrainabcdef.azurecr.io/grafana:latest"
+# alloy_image          = "crcomtrainabcdef.azurecr.io/alloy:latest"
+# loki_image           = "grafana/loki:latest"
+
+# Optional: override only when using an external Loki endpoint. By default,
+# Terraform deploys ca-loki and wires Grafana/Alloy to its internal FQDN.
+# loki_url = "https://logs.example.com"
+
+tags = {
+  Environment = "Training"
+  ManagedBy   = "Terraform"
+}
