@@ -361,7 +361,7 @@ module "ca_auth" {
   # auth-service is the JWKS issuer for report-service. Keep at least one warm
   # replica so report-service token validation never has to wait on a cold
   # start of the issuer.
-  min_replicas = 1
+  min_replicas = 0
   max_replicas = 3
 
   env_vars = merge({
@@ -397,7 +397,7 @@ module "ca_report" {
   ingress_external             = true
 
   # Scale up when HTTP requests are received; scale down to zero when idle.
-  min_replicas = 1
+  min_replicas = 0
   max_replicas = 3
 
   http_scale_rule = {
@@ -442,7 +442,7 @@ module "ca_ingest" {
   image                        = var.data_ingest_image
   ingress_enabled              = false # consumer only
 
-  min_replicas = 1
+  min_replicas = 0
   max_replicas = module.event_hub.partition_count # 1 replica per partition is the EH parallelism cap
 
   custom_scale_rules = [

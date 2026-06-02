@@ -8,7 +8,8 @@ resource "azurerm_cosmosdb_account" "this" {
   free_tier_enabled = var.enable_free_tier
 
   # Force AAD; disable local primary/secondary key auth entirely.
-  local_authentication_disabled = true
+  # local_authentication_disabled = true
+  local_authentication_disabled = false
 
   consistency_policy {
     consistency_level = "Session"
