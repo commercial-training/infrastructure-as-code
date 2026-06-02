@@ -451,7 +451,7 @@ module "ca_ingest" {
       custom_rule_type = "azure-eventhub"
       identity_id      = module.mi_ingest.id
       metadata = {
-        eventHubNamespace         = module.event_hub.namespace_fqdn
+        eventHubNamespace         = module.event_hub.namespace_name
         eventHubName              = module.event_hub.hub_name
         consumerGroup             = module.event_hub.consumer_group_name
         unprocessedEventThreshold = tostring(var.ingest_unprocessed_event_threshold)
