@@ -7,8 +7,8 @@ output "name" {
 }
 
 output "fqdn" {
-  description = "Public/internal FQDN assigned by the ACA environment (null when ingress disabled)."
-  value       = try(azurerm_container_app.this.latest_revision_fqdn, null)
+  description = "Public/internal FQDN assigned by the ACA environment"
+  value       = try(replace(azurerm_container_app.this.latest_revision_fqdn, "/--[^.]+\\./", "."), null)
 }
 
 output "latest_revision_name" {
