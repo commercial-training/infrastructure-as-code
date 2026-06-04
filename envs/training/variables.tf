@@ -35,7 +35,7 @@ variable "enable_grafana_alloy_sidecar" {
 variable "report_service_image" {
   type        = string
   description = "Override after pushing the real image to ACR."
-  default     = "mcr.microsoft.com/k8se/quickstart:latest"
+  default     = "crcommerciala9be68.azurecr.io/report-service:latest"
 }
 
 variable "alloy_image" {
@@ -47,13 +47,13 @@ variable "alloy_image" {
 variable "data_ingest_image" {
   type        = string
   description = "Override after pushing the real image to ACR."
-  default     = "mcr.microsoft.com/k8se/quickstart:latest"
+  default     = "crcommerciala9be68.azurecr.io/data-ingest-service:latest"
 }
 
 variable "auth_service_image" {
   type        = string
   description = "Override after pushing the real image to ACR."
-  default     = "mcr.microsoft.com/k8se/quickstart:latest"
+  default     = "crcommerciala9be68.azurecr.io/auth-service:latest"
 }
 
 variable "prometheus_image" {
