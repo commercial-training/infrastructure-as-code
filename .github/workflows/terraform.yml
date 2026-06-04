@@ -32,15 +32,12 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform fmt
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check -recursive envs/training modules
 
       - name: Terraform validate
-        shell: bash
         run: |
-          for dir in bootstrap envs/training; do
-            terraform -chdir="$dir" init -backend=false -input=false -no-color
-            terraform -chdir="$dir" validate -no-color
-          done
+          terraform -chdir="$TF_WORKING_DIR" init -backend=false -input=false -no-color
+          terraform -chdir="$TF_WORKING_DIR" validate -no-color
 
   plan:
     name: Plan
