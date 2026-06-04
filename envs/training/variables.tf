@@ -29,7 +29,7 @@ variable "enable_grafana_alloy_sidecar" {
     Grafana Alloy sidecar. The sidecar image must be the custom Alloy image
     built from monitoring/alloy so it listens for OTLP on localhost:4317/4318.
   EOT
-  default     = false
+  default     = true
 }
 
 variable "report_service_image" {
