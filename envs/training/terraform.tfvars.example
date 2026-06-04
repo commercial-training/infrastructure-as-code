@@ -1,8 +1,3 @@
-###############################################################################
-# Copy to terraform.tfvars and edit. Do NOT commit terraform.tfvars because it
-# may reference images or tenants you do not want public.
-###############################################################################
-
 location            = "southeastasia"
 resource_group_name = "rg-commercial-trainning"
 
