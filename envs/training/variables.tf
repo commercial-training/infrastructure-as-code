@@ -41,7 +41,7 @@ variable "report_service_image" {
 variable "alloy_image" {
   type        = string
   description = "Grafana Alloy sidecar image. Must be overridden with the ACR image built from monitoring/alloy before enabling the sidecar."
-  default     = "grafana/alloy:latest"
+  default     = "crcommerciala9be68.azurecr.io/alloy:latest"
 }
 
 variable "data_ingest_image" {
@@ -59,13 +59,13 @@ variable "auth_service_image" {
 variable "prometheus_image" {
   type        = string
   description = "Prometheus image. The CD workflow replaces this with the ACR image built from monitoring/prometheus."
-  default     = "prom/prometheus:latest"
+  default     = "crcommerciala9be68.azurecr.io/prometheus:latest"
 }
 
 variable "grafana_image" {
   type        = string
   description = "Grafana image. The CD workflow replaces this with the ACR image built from monitoring/grafana."
-  default     = "grafana/grafana:latest"
+  default     = "crcommerciala9be68.azurecr.io/grafana:latest"
 }
 
 variable "loki_image" {
