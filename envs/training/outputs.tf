@@ -36,9 +36,9 @@ output "event_hub_name" {
   value = module.event_hub.hub_name
 }
 
-output "event_hub_consumer_group" {
-  value = module.event_hub.consumer_group_name
-}
+# output "event_hub_consumer_group" {
+#   value = module.event_hub.consumer_group_name
+# }
 
 output "cosmos_endpoint" {
   value = module.cosmos.endpoint

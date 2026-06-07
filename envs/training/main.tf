@@ -458,7 +458,8 @@ module "ca_ingest" {
       metadata = {
         eventHubNamespace         = module.event_hub.namespace_name
         eventHubName              = module.event_hub.hub_name
-        consumerGroup             = module.event_hub.consumer_group_name
+        # consumerGroup             = module.event_hub.consumer_group_name
+        consumerGroup             = "$Default"
         unprocessedEventThreshold = tostring(var.ingest_unprocessed_event_threshold)
         # Java Azure SDK's BlobCheckpointStore uses blob metadata for offsets,
         checkpointStrategy = "blobMetadata"
@@ -471,7 +472,8 @@ module "ca_ingest" {
   env_vars = merge({
     AZURE_EVENTHUB_NAMESPACE         = module.event_hub.namespace_name
     AZURE_EVENTHUB_NAME              = module.event_hub.hub_name
-    AZURE_EVENTHUB_CONSUMER_GROUP    = module.event_hub.consumer_group_name
+    # AZURE_EVENTHUB_CONSUMER_GROUP    = module.event_hub.consumer_group_name
+    AZURE_EVENTHUB_CONSUMER_GROUP    = "$Default"
     AZURE_CHECKPOINT_STORAGE_ACCOUNT = module.storage.name
     AZURE_CHECKPOINT_CONTAINER       = module.storage.checkpoint_container_name
     AZURE_STORAGE_ENDPOINT           = module.storage.primary_blob_endpoint

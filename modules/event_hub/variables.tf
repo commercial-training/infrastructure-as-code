@@ -32,10 +32,10 @@ variable "message_retention_days" {
   default = 1
 }
 
-variable "consumer_group_name" {
-  type    = string
-  default = "data-ingest-cg"
-}
+# variable "consumer_group_name" {
+#   type    = string
+#   default = "data-ingest-cg"
+# }
 
 variable "tags" {
   type    = map(string)
