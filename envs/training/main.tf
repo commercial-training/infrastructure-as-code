@@ -18,10 +18,10 @@
 # on first apply.
 
 # if have already resource on Azure RG
-# import {
-#   to = module.rg.azurerm_resource_group.this
-#   id = "/subscriptions/6233ef27-8777-4140-b039-94a89a5e9c56/resourceGroups/rg-commercial-trainning"
-# }
+import {
+  to = module.rg.azurerm_resource_group.this
+  id = "/subscriptions/6233ef27-8777-4140-b039-94a89a5e9c56/resourceGroups/rg-commercial-trainning"
+}
 
 data "azurerm_client_config" "current" {}
 
