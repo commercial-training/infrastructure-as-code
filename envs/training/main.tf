@@ -456,8 +456,8 @@ module "ca_ingest" {
       custom_rule_type = "azure-eventhub"
       identity_id      = module.mi_ingest.id
       metadata = {
-        eventHubNamespace         = module.event_hub.namespace_name
-        eventHubName              = module.event_hub.hub_name
+        eventHubNamespace = module.event_hub.namespace_name
+        eventHubName      = module.event_hub.hub_name
         # consumerGroup             = module.event_hub.consumer_group_name
         consumerGroup             = "$Default"
         unprocessedEventThreshold = tostring(var.ingest_unprocessed_event_threshold)
@@ -470,8 +470,8 @@ module "ca_ingest" {
   ]
 
   env_vars = merge({
-    AZURE_EVENTHUB_NAMESPACE         = module.event_hub.namespace_name
-    AZURE_EVENTHUB_NAME              = module.event_hub.hub_name
+    AZURE_EVENTHUB_NAMESPACE = module.event_hub.namespace_name
+    AZURE_EVENTHUB_NAME      = module.event_hub.hub_name
     # AZURE_EVENTHUB_CONSUMER_GROUP    = module.event_hub.consumer_group_name
     AZURE_EVENTHUB_CONSUMER_GROUP    = "$Default"
     AZURE_CHECKPOINT_STORAGE_ACCOUNT = module.storage.name
