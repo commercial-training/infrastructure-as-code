@@ -376,7 +376,7 @@ module "ca_auth" {
     AZURE_CLIENT_ID            = module.mi_auth.client_id
   }, local.otel_auth_env)
 
-  extra_containers = local.alloy_sidecars.auth
+  extra_containers = local.alloy_sidecars
 
   tags = var.tags
 
@@ -423,7 +423,7 @@ module "ca_report" {
     AZURE_CLIENT_ID          = module.mi_report.client_id
   }, local.otel_report_env)
 
-  extra_containers = local.alloy_sidecars.report
+  extra_containers = local.alloy_sidecars
 
   tags = var.tags
 
@@ -481,7 +481,7 @@ module "ca_ingest" {
     AZURE_CLIENT_ID                  = module.mi_ingest.client_id
   }, local.otel_ingest_env)
 
-  extra_containers = local.alloy_sidecars.ingest
+  extra_containers = local.alloy_sidecars
 
   tags = var.tags
 
