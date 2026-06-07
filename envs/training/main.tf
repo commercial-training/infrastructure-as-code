@@ -44,13 +44,13 @@ locals {
   names = {
     log_analytics = "log-${var.name_prefix}-${local.suffix}"
     # acr           = "cr${var.name_prefix}${local.suffix}"
-    acr           = "crcommerciala9be68"
+    acr = "crcommerciala9be68"
     # key_vault     = "kv-${var.name_prefix}-${local.suffix}"
-    key_vault     = "kv-commercial-a9be68"
+    key_vault = "kv-commercial-a9be68"
     # storage       = "st${var.name_prefix}${local.suffix}"
-    storage       = "stcommerciala9be68"
+    storage = "stcommerciala9be68"
     # event_hub_ns  = "evhns-${var.name_prefix}-${local.suffix}"
-    event_hub_ns  = "evhns-commercial-a9be68"
+    event_hub_ns = "evhns-commercial-a9be68"
     # cosmos        = "cosmos-${var.name_prefix}-${local.suffix}"
     cosmos        = "cosmos-commercial-a9be68"
     aca_env       = "cae-${var.name_prefix}"
@@ -254,9 +254,9 @@ locals {
       }
     }]
     } : {
-    auth   = []
-    report = []
-    ingest = []
+      auth   = []
+      report = []
+      ingest = []
   }
 }
 
@@ -376,7 +376,7 @@ module "ca_auth" {
     AZURE_CLIENT_ID            = module.mi_auth.client_id
   }, local.otel_auth_env)
 
-  extra_containers = local.alloy_sidecars
+  extra_containers = local.alloy_sidecars.auth
 
   tags = var.tags
 
@@ -423,7 +423,7 @@ module "ca_report" {
     AZURE_CLIENT_ID          = module.mi_report.client_id
   }, local.otel_report_env)
 
-  extra_containers = local.alloy_sidecars
+  extra_containers = local.alloy_sidecars.report
 
   tags = var.tags
 
@@ -481,7 +481,7 @@ module "ca_ingest" {
     AZURE_CLIENT_ID                  = module.mi_ingest.client_id
   }, local.otel_ingest_env)
 
-  extra_containers = local.alloy_sidecars
+  extra_containers = local.alloy_sidecars.ingest
 
   tags = var.tags
 
