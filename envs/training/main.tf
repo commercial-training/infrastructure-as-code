@@ -254,9 +254,9 @@ locals {
       }
     }]
     } : {
-      auth   = []
-      report = []
-      ingest = []
+    auth   = []
+    report = []
+    ingest = []
   }
 }
 
