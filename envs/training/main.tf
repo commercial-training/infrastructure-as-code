@@ -18,10 +18,10 @@
 # on first apply.
 
 # if have already resource on Azure RG
-import {
-  to = module.rg.azurerm_resource_group.this
-  id = "/subscriptions/6233ef27-8777-4140-b039-94a89a5e9c56/resourceGroups/rg-commercial-trainning"
-}
+# import {
+#   to = module.rg.azurerm_resource_group.this
+#   id = "/subscriptions/6233ef27-8777-4140-b039-94a89a5e9c56/resourceGroups/rg-commercial-trainning"
+# }
 
 data "azurerm_client_config" "current" {}
 
@@ -474,6 +474,7 @@ module "ca_ingest" {
     AZURE_EVENTHUB_NAME      = module.event_hub.hub_name
     # AZURE_EVENTHUB_CONSUMER_GROUP    = module.event_hub.consumer_group_name
     AZURE_EVENTHUB_CONSUMER_GROUP    = "$Default"
+    AZURE_EVENTHUB_INITIAL_POSITION  = "earliest"
     AZURE_CHECKPOINT_STORAGE_ACCOUNT = module.storage.name
     AZURE_CHECKPOINT_CONTAINER       = module.storage.checkpoint_container_name
     AZURE_STORAGE_ENDPOINT           = module.storage.primary_blob_endpoint
