@@ -80,6 +80,12 @@ variable "grafana_admin_user" {
   default     = "admin"
 }
 
+variable "grafana_file_share_quota_gb" {
+  type        = number
+  description = "Quota in GiB for the Azure Files share mounted at Grafana's /var/lib/grafana path."
+  default     = 5
+}
+
 variable "loki_url" {
   type        = string
   description = "Optional external Loki base URL. When null, Grafana and Alloy use the Loki Container App deployed by this stack."

@@ -90,9 +90,35 @@ variable "extra_containers" {
     memory = string
     env    = optional(map(string), {})
     args   = optional(list(string), [])
+    volume_mounts = optional(list(object({
+      name     = string
+      path     = string
+      sub_path = optional(string)
+    })), [])
   }))
   default     = []
   description = "Sidecar containers running in the same pod as the main app (e.g. Grafana Alloy)."
+}
+
+variable "volume_mounts" {
+  type = list(object({
+    name     = string
+    path     = string
+    sub_path = optional(string)
+  }))
+  default     = []
+  description = "Volumes to mount into the main container."
+}
+
+variable "volumes" {
+  type = list(object({
+    name          = string
+    storage_type  = optional(string, "EmptyDir")
+    storage_name  = optional(string)
+    mount_options = optional(string)
+  }))
+  default     = []
+  description = "Container App template volumes available to containers."
 }
 
 variable "http_scale_rule" {

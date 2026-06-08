@@ -9,8 +9,9 @@
 #   client ─► auth-service (/auth/login, JWKS) ─► uses Key Vault PKCS#8 PEM
 #                                                  secret for JWT signing
 #
-# Everything authenticates via user-assigned managed identity. No shared keys,
-# no SAS tokens. Each container app gets exactly the data-plane roles it needs.
+# Runtime services authenticate via user-assigned managed identity. Grafana uses
+# an isolated Azure Files storage account because ACA AzureFile mounts require a
+# storage account key.
 # -----------------------------------------------------------------------------
 
 # Per-env suffix used for globally-unique resource names (storage, ACR, KV,
@@ -54,6 +55,7 @@ locals {
     # cosmos        = "cosmos-${var.name_prefix}-${local.suffix}"
     cosmos        = "cosmos-commercial-a9be68"
     aca_env       = "cae-${var.name_prefix}"
+    grafana_store = "stgrafana${local.suffix}"
     mi_auth       = "id-auth-service"
     mi_report     = "id-report-service"
     mi_ingest     = "id-data-ingest-service"
@@ -118,6 +120,29 @@ module "storage" {
   resource_group_name = module.rg.name
   location            = module.rg.location
   tags                = var.tags
+}
+
+resource "azurerm_storage_account" "grafana" {
+  name                              = local.names.grafana_store
+  resource_group_name               = module.rg.name
+  location                          = module.rg.location
+  account_tier                      = "Standard"
+  account_replication_type          = "LRS"
+  account_kind                      = "StorageV2"
+  access_tier                       = "Hot"
+  min_tls_version                   = "TLS1_2"
+  https_traffic_only_enabled        = true
+  allow_nested_items_to_be_public   = false
+  shared_access_key_enabled         = true
+  public_network_access_enabled     = true
+  infrastructure_encryption_enabled = true
+  tags                              = var.tags
+}
+
+resource "azurerm_storage_share" "grafana" {
+  name               = "grafana-data"
+  storage_account_id = azurerm_storage_account.grafana.id
+  quota              = var.grafana_file_share_quota_gb
 }
 
 module "event_hub" {
@@ -194,6 +219,15 @@ module "aca_env" {
   location                   = module.rg.location
   log_analytics_workspace_id = module.log_analytics.id
   tags                       = var.tags
+}
+
+resource "azurerm_container_app_environment_storage" "grafana" {
+  name                         = "grafana-data"
+  container_app_environment_id = module.aca_env.id
+  account_name                 = azurerm_storage_account.grafana.name
+  share_name                   = azurerm_storage_share.grafana.name
+  access_key                   = azurerm_storage_account.grafana.primary_access_key
+  access_mode                  = "ReadWrite"
 }
 
 # Grafana Alloy sidecars. The Azure image bakes in an OTLP receiver config.
@@ -323,6 +357,22 @@ module "ca_grafana" {
   min_replicas                 = 1
   max_replicas                 = 1
 
+  volumes = [
+    {
+      name          = "grafana-data"
+      storage_type  = "AzureFile"
+      storage_name  = azurerm_container_app_environment_storage.grafana.name
+      mount_options = "uid=472,gid=472,dir_mode=0775,file_mode=0664"
+    },
+  ]
+
+  volume_mounts = [
+    {
+      name = "grafana-data"
+      path = "/var/lib/grafana"
+    },
+  ]
+
   env_vars = {
     AZURE_AUTH_TYPE                     = "msi"
     AZURE_CLIENT_ID                     = module.mi_monitoring.client_id
@@ -345,6 +395,7 @@ module "ca_grafana" {
   depends_on = [
     azurerm_role_assignment.acr_pull_monitoring,
     azurerm_role_assignment.azure_monitor_reader_monitoring,
+    azurerm_container_app_environment_storage.grafana,
     module.ca_loki,
     module.ca_prometheus,
   ]
