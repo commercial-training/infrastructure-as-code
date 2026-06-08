@@ -51,7 +51,8 @@ locals {
     # storage       = "st${var.name_prefix}${local.suffix}"
     storage = "stcommerciala9be68"
     # event_hub_ns  = "evhns-${var.name_prefix}-${local.suffix}"
-    event_hub_ns = "evhns-commercial-a9be68"
+    event_hub_ns   = "evhns-commercial-a9be68"
+    service_bus_ns = "sb-${var.name_prefix}-${local.suffix}"
     # cosmos        = "cosmos-${var.name_prefix}-${local.suffix}"
     cosmos        = "cosmos-commercial-a9be68"
     aca_env       = "cae-${var.name_prefix}"
@@ -152,6 +153,17 @@ module "event_hub" {
   resource_group_name = module.rg.name
   location            = module.rg.location
   sku                 = "Basic" # required for custom consumer groups
+  tags                = var.tags
+}
+
+module "service_bus" {
+  source = "../../modules/service_bus"
+
+  namespace_name      = local.names.service_bus_ns
+  resource_group_name = module.rg.name
+  location            = module.rg.location
+  queue_name          = var.service_bus_queue_name
+  sku                 = var.service_bus_sku
   tags                = var.tags
 }
 
@@ -469,9 +481,11 @@ module "ca_report" {
     # Event Hubs namespace property takes the SHORT name only — Spring Cloud
     # Azure appends `.servicebus.windows.net` internally. Using the FQDN here
     # produces `<ns>.servicebus.windows.net.servicebus.windows.net`.
-    AZURE_EVENTHUB_NAMESPACE = module.event_hub.namespace_name
-    AZURE_EVENTHUB_NAME      = module.event_hub.hub_name
-    AZURE_CLIENT_ID          = module.mi_report.client_id
+    AZURE_EVENTHUB_NAMESPACE    = module.event_hub.namespace_name
+    AZURE_EVENTHUB_NAME         = module.event_hub.hub_name
+    AZURE_SERVICEBUS_NAMESPACE  = module.service_bus.namespace_name
+    AZURE_SERVICEBUS_QUEUE_NAME = module.service_bus.queue_name
+    AZURE_CLIENT_ID             = module.mi_report.client_id
   }, local.otel_report_env)
 
   extra_containers = local.alloy_sidecars.report
@@ -482,6 +496,7 @@ module "ca_report" {
     azurerm_role_assignment.acr_pull_report,
     azurerm_role_assignment.blob_writer_report,
     azurerm_role_assignment.evh_sender_report,
+    azurerm_role_assignment.sb_sender_report,
     module.ca_loki,
     module.ca_prometheus,
   ]
@@ -526,6 +541,8 @@ module "ca_ingest" {
     # AZURE_EVENTHUB_CONSUMER_GROUP    = module.event_hub.consumer_group_name
     AZURE_EVENTHUB_CONSUMER_GROUP    = "$Default"
     AZURE_EVENTHUB_INITIAL_POSITION  = "earliest"
+    AZURE_SERVICEBUS_NAMESPACE       = module.service_bus.namespace_name
+    AZURE_SERVICEBUS_QUEUE_NAME      = module.service_bus.queue_name
     AZURE_CHECKPOINT_STORAGE_ACCOUNT = module.storage.name
     AZURE_CHECKPOINT_CONTAINER       = module.storage.checkpoint_container_name
     AZURE_STORAGE_ENDPOINT           = module.storage.primary_blob_endpoint
@@ -542,6 +559,7 @@ module "ca_ingest" {
   depends_on = [
     azurerm_role_assignment.acr_pull_ingest,
     azurerm_role_assignment.evh_receiver_ingest,
+    azurerm_role_assignment.sb_receiver_ingest,
     azurerm_role_assignment.blob_checkpoint_ingest,
     azurerm_cosmosdb_sql_role_assignment.cosmos_writer_ingest,
     module.ca_loki,

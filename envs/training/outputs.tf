@@ -36,6 +36,14 @@ output "event_hub_name" {
   value = module.event_hub.hub_name
 }
 
+output "service_bus_namespace_fqdn" {
+  value = module.service_bus.namespace_fqdn
+}
+
+output "service_bus_queue_name" {
+  value = module.service_bus.queue_name
+}
+
 # output "event_hub_consumer_group" {
 #   value = module.event_hub.consumer_group_name
 # }

@@ -76,6 +76,12 @@ resource "azurerm_role_assignment" "evh_sender_report" {
   principal_id         = module.mi_report.principal_id
 }
 
+resource "azurerm_role_assignment" "sb_sender_report" {
+  scope                = module.service_bus.queue_id
+  role_definition_name = "Azure Service Bus Data Sender"
+  principal_id         = module.mi_report.principal_id
+}
+
 # -----------------------------------------------------------------------------
 # data-ingest-service — consume events, persist checkpoints, write Cosmos records.
 # -----------------------------------------------------------------------------
@@ -83,6 +89,12 @@ resource "azurerm_role_assignment" "evh_sender_report" {
 resource "azurerm_role_assignment" "evh_receiver_ingest" {
   scope                = module.event_hub.hub_id
   role_definition_name = "Azure Event Hubs Data Receiver"
+  principal_id         = module.mi_ingest.principal_id
+}
+
+resource "azurerm_role_assignment" "sb_receiver_ingest" {
+  scope                = module.service_bus.queue_id
+  role_definition_name = "Azure Service Bus Data Receiver"
   principal_id         = module.mi_ingest.principal_id
 }
 

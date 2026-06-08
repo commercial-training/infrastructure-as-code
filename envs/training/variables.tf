@@ -104,6 +104,23 @@ variable "ingest_unprocessed_event_threshold" {
   default     = 64
 }
 
+variable "service_bus_queue_name" {
+  type        = string
+  description = "Service Bus queue used for report data events."
+  default     = "data-events"
+}
+
+variable "service_bus_sku" {
+  type        = string
+  description = "Service Bus namespace SKU for the sample queue."
+  default     = "Basic"
+
+  validation {
+    condition     = contains(["Basic", "Standard", "Premium"], var.service_bus_sku)
+    error_message = "service_bus_sku must be Basic, Standard, or Premium."
+  }
+}
+
 variable "tags" {
   type = map(string)
   default = {
