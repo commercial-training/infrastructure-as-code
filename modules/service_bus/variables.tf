@@ -24,7 +24,7 @@ variable "location" {
 variable "lock_duration" {
   description = "ISO 8601 duration for the peek-lock held by a receiver."
   type        = string
-  default     = "PT1M"
+  default     = "PT5M"
 }
 
 variable "max_delivery_count" {

@@ -543,6 +543,7 @@ module "ca_ingest" {
     AZURE_EVENTHUB_INITIAL_POSITION  = "earliest"
     AZURE_SERVICEBUS_NAMESPACE       = module.service_bus.namespace_name
     AZURE_SERVICEBUS_QUEUE_NAME      = module.service_bus.queue_name
+    AZURE_SERVICEBUS_BATCH_SIZE      = tostring(var.service_bus_batch_size)
     AZURE_CHECKPOINT_STORAGE_ACCOUNT = module.storage.name
     AZURE_CHECKPOINT_CONTAINER       = module.storage.checkpoint_container_name
     AZURE_STORAGE_ENDPOINT           = module.storage.primary_blob_endpoint

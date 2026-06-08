@@ -110,6 +110,12 @@ variable "service_bus_queue_name" {
   default     = "data-events"
 }
 
+variable "service_bus_batch_size" {
+  type        = number
+  description = "Number of Service Bus messages data-ingest-service buffers before batch inserting records into Cosmos DB."
+  default     = 10
+}
+
 variable "service_bus_sku" {
   type        = string
   description = "Service Bus namespace SKU for the sample queue."
